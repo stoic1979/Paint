@@ -14,6 +14,15 @@ class Document : public QWidget
 public:
     explicit Document(QWidget *parent = 0);
 
+    bool openImage(const QString &fileName);
+    bool saveImage(const QString &fileName, const char *fileFormat);
+    void setPenColor(const QColor &newColor);
+    void setPenWidth(int newWidth);
+
+    bool isModified() const { return modified; }
+    QColor getPenColor() const { return penColor; }
+    int getPenWidth() const { return penWidth; }
+
 protected:
     void paintEvent(QPaintEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -21,6 +30,11 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 private:
+    bool modified;
+
+    int penWidth;
+    QColor penColor;
+
     std::unique_ptr<Shape> currentShape;
     std::list<std::unique_ptr<Shape>> shapes;
 };

@@ -1,12 +1,13 @@
 #include "rectangle.h"
 
-Rectangle::Rectangle(const QPoint &topLeft)
+Rectangle::Rectangle(const QPoint &topLeft, int penWidth, const QColor &penColor) :
+    Shape(penWidth, penColor)
 {
     r.setTopLeft(topLeft);
     r.setBottomRight(topLeft);
 }
 
-void Rectangle::draw(QPainter &painter)
+void Rectangle::doDraw(QPainter &painter)
 {
     if (!r.isNull()) {
         painter.drawRect(r.normalized());

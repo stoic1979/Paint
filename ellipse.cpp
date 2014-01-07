@@ -1,12 +1,13 @@
 #include "ellipse.h"
 
-Ellipse::Ellipse(const QPoint &topLeft)
+Ellipse::Ellipse(const QPoint &topLeft, int penWidth, const QColor &penColor) :
+    Shape(penWidth, penColor)
 {
     r.setTopLeft(topLeft);
     r.setBottomRight(topLeft);
 }
 
-void Ellipse::draw(QPainter &painter)
+void Ellipse::doDraw(QPainter &painter)
 {
     if (!r.isNull()) {
         painter.drawEllipse(r.normalized());

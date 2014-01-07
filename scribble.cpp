@@ -1,11 +1,12 @@
 #include "scribble.h"
 
-Scribble::Scribble(const QPoint &topLeft)
+Scribble::Scribble(const QPoint &topLeft, int penWidth, const QColor &penColor) :
+    Shape(penWidth, penColor)
 {
     update(topLeft);
 }
 
-void Scribble::draw(QPainter &painter)
+void Scribble::doDraw(QPainter &painter)
 {
     painter.drawPolyline(poly);
 }

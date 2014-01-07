@@ -8,13 +8,14 @@
 class Scribble : public Shape
 {
 public:
-    explicit Scribble(const QPoint &topLeft);
-
-    virtual void draw(QPainter &painter) override;
+    explicit Scribble(const QPoint &topLeft, int penWidth, const QColor& penColor);
 
     virtual QRect rect() const override;
 
     virtual void update(const QPoint &lastPoint) override;
+
+protected:
+    virtual void doDraw(QPainter &painter) override;
 
 private:
     QPolygon poly;
