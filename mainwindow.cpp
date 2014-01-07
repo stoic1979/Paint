@@ -8,9 +8,8 @@
 #include <functional>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent), doc(new Document)
 {
-    doc = new Document;
     setCentralWidget(doc);
 
     createActions();
@@ -54,7 +53,7 @@ void MainWindow::save()
 
 void MainWindow::penColor()
 {
-    QColor newColor = QColorDialog::getColor(doc->getPenColor());
+    const QColor newColor = QColorDialog::getColor(doc->getPenColor());
     if (newColor.isValid()) {
         doc->setPenColor(newColor);
     }
@@ -157,33 +156,34 @@ void MainWindow::createMenus()
 bool MainWindow::maybeSave()
 {
     if (doc->isModified()) {
-       QMessageBox::StandardButton ret;
-       ret = QMessageBox::warning(this, tr("Paint"),
-                          tr("The image has been modified.\n"
-                             "Do you want to save your changes?"),
-                          QMessageBox::Save | QMessageBox::Discard
-              | QMessageBox::Cancel);
+       const QMessageBox::StandardButton ret =
+               QMessageBox::warning(this, tr("Paint"),
+                                    tr("The image has been modified.\n"
+                                       "Do you want to save your changes?"),
+                                    QMessageBox::Save |
+                                    QMessageBox::Discard |
+                                    QMessageBox::Cancel);
         if (ret == QMessageBox::Save) {
             return saveFile("bmp");
         } else if (ret == QMessageBox::Cancel) {
             return false;
         }
     }
+
     return true;
 }
 
 bool MainWindow::saveFile(const QByteArray &fileFormat)
 {
-    QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
+    const QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
 
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
-                               initialPath,
-                               tr("%1 Files (*.%2);;All Files (*)")
-                               .arg(QString::fromLatin1(fileFormat.toUpper()))
-                               .arg(QString::fromLatin1(fileFormat)));
-    if (fileName.isEmpty()) {
-        return false;
-    } else {
-        return doc->saveImage(fileName, fileFormat.constData());
-    }
+    const QString fileName =
+            QFileDialog::getSaveFileName(this, tr("Save As"),
+                                         initialPath,
+                                         tr("%1 Files (*.%2);;All Files (*)")
+                                         .arg(QString::fromLatin1(
+                                                  fileFormat.toUpper()))
+                                         .arg(QString::fromLatin1(fileFormat)));
+    return !fileName.isEmpty() &&
+            doc->saveImage(fileName, fileFormat.constData());
 }

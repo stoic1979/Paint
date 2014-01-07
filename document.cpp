@@ -142,7 +142,7 @@ void Document::resizeImage(QImage *image, const QSize &newSize)
     }
 
     QImage newImage(newSize, QImage::Format_RGB32);
-    newImage.fill(qRgb(255, 255, 255));
+    newImage.fill(Qt::white);
 
     QPainter painter(&newImage);
     painter.drawImage(QPoint(0, 0), *image);
