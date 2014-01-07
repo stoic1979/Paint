@@ -3,6 +3,7 @@
 
 #include "document.h"
 
+#include <QActionGroup>
 #include <QMainWindow>
 
 class MainWindow : public QMainWindow
@@ -32,7 +33,7 @@ private:
     Document *doc;
 
     QMenu *fileMenu;
-    QMenu *optionMenu;
+    QMenu *brushMenu;
     QMenu *effectsMenu;
 
     QAction *openAct;
@@ -41,6 +42,11 @@ private:
 
     QAction *penColorAct;
     QAction *penWidthAct;
+
+    QActionGroup *brushActionGroup;
+    QAction *ellipseAct;
+    QAction *rectAct;
+    QAction *scribbleAct;
 
     QAction *flipHorizAct;
     QAction *flipVerticAct;

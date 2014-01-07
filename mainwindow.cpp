@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     doc = new Document;
-    doc->setShapeFactory(createRectangle);
     setCentralWidget(doc);
 
     createActions();
@@ -19,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowTitle(tr("Paint"));
     resize(500, 500);
+
+    brushActionGroup->actions().first()->trigger();
 }
 
 MainWindow::~MainWindow()
@@ -90,6 +91,28 @@ void MainWindow::createActions()
     penWidthAct = new QAction(tr("Pen &Width..."), this);
     connect(penWidthAct, SIGNAL(triggered()), this, SLOT(penWidth()));
 
+    brushActionGroup = new QActionGroup(this);
+
+    ellipseAct = new QAction(tr("Ellipse"), this);
+    connect(ellipseAct, &QAction::triggered,
+            std::bind(&Document::setShapeFactory, doc, createEllipse));
+    ellipseAct->setCheckable(true);
+    brushActionGroup->addAction(ellipseAct);
+
+    rectAct = new QAction(tr("Rectangle"), this);
+    connect(rectAct, &QAction::triggered,
+            std::bind(&Document::setShapeFactory, doc, createRectangle));
+    rectAct->setCheckable(true);
+    brushActionGroup->addAction(rectAct);
+
+    scribbleAct = new QAction(tr("Line"), this);
+    connect(scribbleAct, &QAction::triggered,
+            std::bind(&Document::setShapeFactory, doc, createScribble));
+    scribbleAct->setCheckable(true);
+    brushActionGroup->addAction(scribbleAct);
+
+    brushActionGroup->setExclusive(true);
+
     flipHorizAct = new QAction(tr("Flip Horizontally"), this);
     connect(flipHorizAct, &QAction::triggered,
             std::bind(&Document::flip, doc, true, false));
@@ -107,16 +130,22 @@ void MainWindow::createMenus()
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
 
-    optionMenu = new QMenu(tr("&Options"), this);
-    optionMenu->addAction(penColorAct);
-    optionMenu->addAction(penWidthAct);
+    brushMenu = new QMenu(tr("&Brush"), this);
+    brushMenu->addAction(penColorAct);
+    brushMenu->addAction(penWidthAct);
+
+    brushMenu->addSeparator();
+
+    brushMenu->addAction(ellipseAct);
+    brushMenu->addAction(rectAct);
+    brushMenu->addAction(scribbleAct);
 
     effectsMenu = new QMenu(tr("&Effects"), this);
     effectsMenu->addAction(flipHorizAct);
     effectsMenu->addAction(flipVerticAct);
 
     menuBar()->addMenu(fileMenu);
-    menuBar()->addMenu(optionMenu);
+    menuBar()->addMenu(brushMenu);
     menuBar()->addMenu(effectsMenu);
 }
 
