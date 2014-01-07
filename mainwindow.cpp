@@ -4,6 +4,8 @@
 
 #include <QtWidgets>
 
+#include <functional>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -85,6 +87,14 @@ void MainWindow::createActions()
 
     penWidthAct = new QAction(tr("Pen &Width..."), this);
     connect(penWidthAct, SIGNAL(triggered()), this, SLOT(penWidth()));
+
+    flipHorizAct = new QAction(tr("Flip Horizontally"), this);
+    connect(flipHorizAct, &QAction::triggered,
+            std::bind(&Document::flip, doc, true, false));
+
+    flipVerticAct = new QAction(tr("Flip Vertically"), this);
+    connect(flipVerticAct, &QAction::triggered,
+            std::bind(&Document::flip, doc, false, true));
 }
 
 void MainWindow::createMenus()
@@ -99,8 +109,13 @@ void MainWindow::createMenus()
     optionMenu->addAction(penColorAct);
     optionMenu->addAction(penWidthAct);
 
+    effectsMenu = new QMenu(tr("&Effects"), this);
+    effectsMenu->addAction(flipHorizAct);
+    effectsMenu->addAction(flipVerticAct);
+
     menuBar()->addMenu(fileMenu);
     menuBar()->addMenu(optionMenu);
+    menuBar()->addMenu(effectsMenu);
 }
 
 bool MainWindow::maybeSave()

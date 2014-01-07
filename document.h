@@ -23,13 +23,19 @@ public:
     QColor getPenColor() const { return penColor; }
     int getPenWidth() const { return penWidth; }
 
+    void flip(bool horiz, bool vert);
+
 protected:
-    void paintEvent(QPaintEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 private:
+    void resizeImage(QImage *image, const QSize &newSize);
+
+    QImage image;
     bool modified;
 
     int penWidth;

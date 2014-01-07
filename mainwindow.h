@@ -19,6 +19,7 @@ protected:
 private slots:
     void open();
     void save();
+
     void penColor();
     void penWidth();
 
@@ -32,12 +33,17 @@ private:
 
     QMenu *fileMenu;
     QMenu *optionMenu;
+    QMenu *effectsMenu;
 
     QAction *openAct;
     QAction *saveAsAct;
     QAction *exitAct;
+
     QAction *penColorAct;
     QAction *penWidthAct;
+
+    QAction *flipHorizAct;
+    QAction *flipVerticAct;
 };
 
 #endif // MAINWINDOW_H

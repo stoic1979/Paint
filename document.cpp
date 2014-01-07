@@ -15,25 +15,37 @@ Document::Document(QWidget *parent) :
 {
 }
 
+void Document::flip(bool horiz, bool vert)
+{
+    image = image.mirrored(horiz, vert);
+    modified = true;
+
+    update();
+}
+
 bool Document::openImage(const QString &fileName)
 {
     QImage loadedImage;
-    if (!loadedImage.load(fileName))
+    if (!loadedImage.load(fileName)) {
         return false;
+    }
 
     QSize newSize = loadedImage.size().expandedTo(size());
-    //resizeImage(&loadedImage, newSize);
+
+    resizeImage(&loadedImage, newSize);
     modified = false;
+
     update();
+
     return true;
 }
 
 bool Document::saveImage(const QString &fileName, const char *fileFormat)
 {
-    QImage image(size(), QImage::Format_RGB32);
+    QImage visibleImage = image;
+    resizeImage(&visibleImage, size());
 
-    render(&image);
-    if (image.save(fileName, fileFormat)) {
+    if (visibleImage.save(fileName, fileFormat)) {
         modified = false;
         return true;
     } else {
@@ -89,6 +101,9 @@ void Document::mouseMoveEvent(QMouseEvent *event)
 void Document::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && currentShape) {
+        QPainter painter(&image);
+        currentShape->draw(painter);
+
         shapes.emplace_back(std::move(currentShape));
 
         modified = true;
@@ -97,17 +112,41 @@ void Document::mouseReleaseEvent(QMouseEvent *event)
 
 void Document::paintEvent(QPaintEvent *event)
 {
-    const QRegion paintRegion = event->region();
+    const QRect paintRect = event->rect();
 
     QPainter painter(this);
 
-    for (auto& s : shapes) {
-        if (paintRegion.intersects(s->rect())) {
-            s->draw(painter);
-        }
-    }
+    painter.drawImage(paintRect, image, paintRect);
 
     if (currentShape) {
         currentShape->draw(painter);
     }
+}
+
+void Document::resizeEvent(QResizeEvent *event)
+{
+    if (width() > image.width() || height() > image.height()) {
+        const int newWidth = qMax(width() + 128, image.width());
+        const int newHeight = qMax(height() + 128, image.height());
+
+        resizeImage(&image, QSize(newWidth, newHeight));
+
+        update();
+    }
+
+    QWidget::resizeEvent(event);
+}
+
+void Document::resizeImage(QImage *image, const QSize &newSize)
+{
+    if (image->size() == newSize) {
+        return;
+    }
+
+    QImage newImage(newSize, QImage::Format_RGB32);
+    newImage.fill(qRgb(255, 255, 255));
+
+    QPainter painter(&newImage);
+    painter.drawImage(QPoint(0, 0), *image);
+    *image = newImage;
 }
