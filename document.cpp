@@ -1,9 +1,5 @@
 #include "document.h"
 
-#include "ellipse.h"
-#include "rectangle.h"
-#include "scribble.h"
-
 #include <qevent.h>
 #include <QPainter>
 
@@ -63,22 +59,15 @@ void Document::setPenWidth(int newWidth)
     penWidth = newWidth;
 }
 
+void Document::setShapeFactory(shape_factory_t f)
+{
+    factory = f;
+}
+
 void Document::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
-        switch (shapes.size() % 3) {
-        case 0:
-            currentShape.reset(new Ellipse(event->pos(), penWidth, penColor));
-            break;
-
-        case 1:
-            currentShape.reset(new Scribble(event->pos(), penWidth, penColor));
-            break;
-
-        default:
-            currentShape.reset(new Rectangle(event->pos(), penWidth, penColor));
-            break;
-        }
+    if (event->button() == Qt::LeftButton && factory) {
+        currentShape = factory(event->pos(), penWidth, penColor);
     }
 }
 

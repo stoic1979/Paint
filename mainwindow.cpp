@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include "document.h"
+#include "shape.h"
 
 #include <QtWidgets>
 
@@ -10,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     doc = new Document;
+    doc->setShapeFactory(createRectangle);
     setCentralWidget(doc);
 
     createActions();

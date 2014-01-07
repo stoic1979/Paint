@@ -18,3 +18,13 @@ void Shape::draw(QPainter &painter)
     doDraw(painter);
     painter.setPen(prevPen);
 }
+
+QRect Shape::rect() const
+{
+    return doRect();
+}
+
+void Shape::update(const QPoint &toPoint)
+{
+    doUpdate(toPoint);
+}

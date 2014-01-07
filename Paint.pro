@@ -22,7 +22,4 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     document.h \
-    shape.h \
-    ellipse.h \
-    rectangle.h \
-    scribble.h
+    shape.h

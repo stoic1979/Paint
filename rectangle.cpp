@@ -1,6 +1,27 @@
-#include "rectangle.h"
+#include "shape.h"
 
-Rectangle::Rectangle(const QPoint &topLeft, int penWidth, const QColor &penColor) :
+class Rectangle : public Shape
+{
+public:
+    explicit Rectangle(const QPoint &topLeft,
+                       int penWidth,
+                       const QColor& penColor);
+
+protected:
+    virtual void doDraw(QPainter &painter) override;
+
+    virtual QRect doRect() const override;
+
+    virtual void doUpdate(const QPoint &toPoint) override;
+
+
+private:
+    QRect r;
+};
+
+Rectangle::Rectangle(const QPoint &topLeft,
+                     int penWidth,
+                     const QColor &penColor) :
     Shape(penWidth, penColor)
 {
     r.setTopLeft(topLeft);
@@ -14,12 +35,19 @@ void Rectangle::doDraw(QPainter &painter)
     }
 }
 
-QRect Rectangle::rect() const
+QRect Rectangle::doRect() const
 {
     return r;
 }
 
-void Rectangle::update(const QPoint &lastPoint)
+void Rectangle::doUpdate(const QPoint &toPoint)
 {
-    r.setBottomRight(lastPoint);
+    r.setBottomRight(toPoint);
+}
+
+std::unique_ptr<Shape> createRectangle(const QPoint &topLeft,
+                                       int penWidth,
+                                       const QColor& penColor)
+{
+    return std::unique_ptr<Shape>(new Rectangle(topLeft, penWidth, penColor));
 }

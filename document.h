@@ -5,6 +5,7 @@
 
 #include <QWidget>
 
+#include <functional>
 #include <list>
 #include <memory>
 
@@ -12,12 +13,17 @@ class Document : public QWidget
 {
     Q_OBJECT
 public:
+    typedef std::function<std::unique_ptr<Shape>(
+            const QPoint &, int, const QColor&)> shape_factory_t;
+
     explicit Document(QWidget *parent = 0);
 
     bool openImage(const QString &fileName);
     bool saveImage(const QString &fileName, const char *fileFormat);
     void setPenColor(const QColor &newColor);
     void setPenWidth(int newWidth);
+
+    void setShapeFactory(shape_factory_t f);
 
     bool isModified() const { return modified; }
     QColor getPenColor() const { return penColor; }
@@ -40,6 +46,8 @@ private:
 
     int penWidth;
     QColor penColor;
+
+    shape_factory_t factory;
 
     std::unique_ptr<Shape> currentShape;
     std::list<std::unique_ptr<Shape>> shapes;
