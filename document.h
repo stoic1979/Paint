@@ -1,12 +1,12 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
-#include <QPolygon>
-#include <QRect>
+#include "shape.h"
+
 #include <QWidget>
 
-#include <functional>
 #include <list>
+#include <memory>
 
 class Document : public QWidget
 {
@@ -21,17 +21,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 private:
-    static
-    void drawEllipse(QPainter &p, const QRect& r);
-
-    static
-    void drawRect(QPainter &p, const QRect& r);
-
-    QPolygon poly;
-    QRect rect;
-    std::function<void(QPainter&, const QRect&)> drawShape;
-
-    std::list<std::function<void(QPainter&)>> shapes;
+    std::unique_ptr<Shape> current;
+    std::list<std::unique_ptr<Shape>> shapes;
 };
 
 #endif // DOCUMENT_H

@@ -14,7 +14,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    document.cpp
+    document.cpp \
+    shape.cpp \
+    ellipse.cpp \
+    rectangle.cpp \
+    scribble.cpp
 
 HEADERS  += mainwindow.h \
-    document.h
+    document.h \
+    shape.h \
+    ellipse.h \
+    rectangle.h \
+    scribble.h

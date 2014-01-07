@@ -1,32 +1,24 @@
 #include "document.h"
 
+#include "ellipse.h"
+#include "rectangle.h"
+#include "scribble.h"
+
 #include <qevent.h>
 #include <QPainter>
 
 #include <algorithm>
 
 Document::Document(QWidget *parent) :
-    QWidget(parent),
-    drawShape(&Document::drawEllipse)
+    QWidget(parent)
 {
-}
-
-void Document::drawEllipse(QPainter &p, const QRect& r)
-{
-    p.drawEllipse(r);
-}
-
-void Document::drawRect(QPainter &p, const QRect& r)
-{
-    p.drawRect(r);
 }
 
 void Document::mousePressEvent(QMouseEvent *event)
 {
     event->accept();
 
-    poly << event->pos();
-    rect.setTopLeft(event->pos());
+    current.reset(new Scribble(event->pos()));
 }
 
 void Document::mouseReleaseEvent(QMouseEvent *event)
@@ -35,35 +27,32 @@ void Document::mouseReleaseEvent(QMouseEvent *event)
 
     event->accept();
 
-    QPolygon().swap(poly);
-
-    shapes.push_back(std::bind(drawShape, _1, rect));
-    rect = QRect();
-
-    drawShape = shapes.size() % 2 ?
-                    &Document::drawRect :
-                    &Document::drawEllipse;
+    shapes.emplace_back(std::move(current));
 }
 
 void Document::mouseMoveEvent(QMouseEvent *event)
 {
     event->accept();
 
-    poly << event->pos();
-    rect.setBottomRight(event->pos());
-    update();
+    const QRect prevRect = current->rect();
+    current->update(event->pos());
+
+    update(current->rect().united(prevRect).adjusted(-2, -2, +2, +2));
 }
 
 void Document::paintEvent(QPaintEvent *event)
 {
+    const QRegion paintRegion = event->region();
+
     QPainter painter(this);
 
-    for (auto& f : shapes) {
-        f(painter);
+    for (auto& s : shapes) {
+        if (paintRegion.intersects(s->rect())) {
+            s->draw(painter);
+        }
     }
 
-    if (!rect.isNull()) {
-        painter.drawPolyline(poly);
-        drawShape(painter, rect.normalized());
+    if (current) {
+        current->draw(painter);
     }
 }
