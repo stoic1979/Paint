@@ -30,6 +30,7 @@ public:
     int getPenWidth() const { return penWidth; }
 
     void flip(bool horiz, bool vert);
+    void rotate(qreal deg);
 
 protected:
     void mousePressEvent(QMouseEvent *event);

@@ -120,6 +120,10 @@ void MainWindow::createActions()
     flipVerticAct = new QAction(tr("Flip Vertically"), this);
     connect(flipVerticAct, &QAction::triggered,
             std::bind(&Document::flip, doc, false, true));
+
+    rotateAct = new QAction(tr("Rotate 90 deg"), this);
+    connect(rotateAct, &QAction::triggered,
+            std::bind(&Document::rotate, doc, 90.0));
 }
 
 void MainWindow::createMenus()
@@ -143,6 +147,7 @@ void MainWindow::createMenus()
     effectsMenu = new QMenu(tr("&Effects"), this);
     effectsMenu->addAction(flipHorizAct);
     effectsMenu->addAction(flipVerticAct);
+    effectsMenu->addAction(rotateAct);
 
     menuBar()->addMenu(fileMenu);
     menuBar()->addMenu(brushMenu);

@@ -50,6 +50,7 @@ private:
 
     QAction *flipHorizAct;
     QAction *flipVerticAct;
+    QAction *rotateAct;
 };
 
 #endif // MAINWINDOW_H

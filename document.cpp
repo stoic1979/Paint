@@ -19,6 +19,15 @@ void Document::flip(bool horiz, bool vert)
     update();
 }
 
+void Document::rotate(qreal deg)
+{
+    QMatrix transf;
+    image = image.transformed(transf.rotate(deg));
+    modified = true;
+
+    update();
+}
+
 bool Document::openImage(const QString &fileName)
 {
     QImage loadedImage;
