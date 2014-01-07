@@ -7,8 +7,6 @@
 #include <qevent.h>
 #include <QPainter>
 
-#include <algorithm>
-
 Document::Document(QWidget *parent) :
     QWidget(parent)
 {
@@ -16,28 +14,41 @@ Document::Document(QWidget *parent) :
 
 void Document::mousePressEvent(QMouseEvent *event)
 {
-    event->accept();
+    if (event->button() == Qt::LeftButton) {
+        switch (shapes.size() % 3) {
+        case 0:
+            currentShape.reset(new Ellipse(event->pos()));
+            break;
 
-    current.reset(new Scribble(event->pos()));
-}
+        case 1:
+            currentShape.reset(new Scribble(event->pos()));
+            break;
 
-void Document::mouseReleaseEvent(QMouseEvent *event)
-{
-    using namespace std::placeholders;
-
-    event->accept();
-
-    shapes.emplace_back(std::move(current));
+        default:
+            currentShape.reset(new Rectangle(event->pos()));
+            break;
+        }
+    }
 }
 
 void Document::mouseMoveEvent(QMouseEvent *event)
 {
-    event->accept();
+    if ((event->buttons() & Qt::LeftButton) && currentShape) {
 
-    const QRect prevRect = current->rect();
-    current->update(event->pos());
+        const QRect prevRect = currentShape->rect();
+        currentShape->update(event->pos());
 
-    update(current->rect().united(prevRect).adjusted(-2, -2, +2, +2));
+        update(currentShape->rect().united(prevRect).adjusted(-2, -2, +2, +2));
+    }
+}
+
+void Document::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton && currentShape) {
+        shapes.emplace_back(std::move(currentShape));
+
+
+    }
 }
 
 void Document::paintEvent(QPaintEvent *event)
@@ -52,7 +63,7 @@ void Document::paintEvent(QPaintEvent *event)
         }
     }
 
-    if (current) {
-        current->draw(painter);
+    if (currentShape) {
+        currentShape->draw(painter);
     }
 }

@@ -21,7 +21,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 private:
-    std::unique_ptr<Shape> current;
+    std::unique_ptr<Shape> currentShape;
     std::list<std::unique_ptr<Shape>> shapes;
 };
 
