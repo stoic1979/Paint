@@ -1,6 +1,7 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
+#include <QPolygon>
 #include <QRect>
 #include <QWidget>
 
@@ -26,6 +27,7 @@ private:
     static
     void drawRect(QPainter &p, const QRect& r);
 
+    QPolygon poly;
     QRect rect;
     std::function<void(QPainter&, const QRect&)> drawShape;
 

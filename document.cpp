@@ -25,6 +25,7 @@ void Document::mousePressEvent(QMouseEvent *event)
 {
     event->accept();
 
+    poly << event->pos();
     rect.setTopLeft(event->pos());
 }
 
@@ -33,6 +34,8 @@ void Document::mouseReleaseEvent(QMouseEvent *event)
     using namespace std::placeholders;
 
     event->accept();
+
+    QPolygon().swap(poly);
 
     shapes.push_back(std::bind(drawShape, _1, rect));
     rect = QRect();
@@ -46,6 +49,7 @@ void Document::mouseMoveEvent(QMouseEvent *event)
 {
     event->accept();
 
+    poly << event->pos();
     rect.setBottomRight(event->pos());
     update();
 }
@@ -59,6 +63,7 @@ void Document::paintEvent(QPaintEvent *event)
     }
 
     if (!rect.isNull()) {
+        painter.drawPolyline(poly);
         drawShape(painter, rect.normalized());
     }
 }
