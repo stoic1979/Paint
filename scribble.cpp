@@ -43,6 +43,14 @@ void Scribble::doUpdate(const QPoint &toPoint)
     poly << toPoint;
 }
 
+std::unique_ptr<Shape> createEraser(const QPoint &topLeft,
+                                    int penWidth,
+                                    const QColor&)
+{
+    return std::unique_ptr<Shape>(
+                new Scribble(topLeft, penWidth, Qt::white));
+}
+
 std::unique_ptr<Shape> createScribble(const QPoint &topLeft,
                                       int penWidth,
                                       const QColor& penColor)

@@ -37,6 +37,10 @@ std::unique_ptr<Shape> createEllipse(const QPoint &topLeft,
                                      int penWidth,
                                      const QColor& penColor);
 
+std::unique_ptr<Shape> createEraser(const QPoint &topLeft,
+                                      int penWidth,
+                                      const QColor&);
+
 std::unique_ptr<Shape> createRectangle(const QPoint &topLeft,
                                        int penWidth,
                                        const QColor& penColor);

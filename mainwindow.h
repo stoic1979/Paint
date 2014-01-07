@@ -45,6 +45,7 @@ private:
 
     QActionGroup *brushActionGroup;
     QAction *ellipseAct;
+    QAction *eraserAct;
     QAction *rectAct;
     QAction *scribbleAct;
 

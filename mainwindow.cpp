@@ -98,6 +98,12 @@ void MainWindow::createActions()
     ellipseAct->setCheckable(true);
     brushActionGroup->addAction(ellipseAct);
 
+    eraserAct = new QAction(tr("Eraser"), this);
+    connect(eraserAct, &QAction::triggered,
+            std::bind(&Document::setShapeFactory, doc, createEraser));
+    eraserAct->setCheckable(true);
+    brushActionGroup->addAction(eraserAct);
+
     rectAct = new QAction(tr("Rectangle"), this);
     connect(rectAct, &QAction::triggered,
             std::bind(&Document::setShapeFactory, doc, createRectangle));
@@ -140,6 +146,7 @@ void MainWindow::createMenus()
     brushMenu->addSeparator();
 
     brushMenu->addAction(ellipseAct);
+    brushMenu->addAction(eraserAct);
     brushMenu->addAction(rectAct);
     brushMenu->addAction(scribbleAct);
 
