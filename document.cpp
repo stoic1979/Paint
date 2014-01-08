@@ -45,7 +45,8 @@ bool Document::openImage(const QString &fileName)
 
     const QSize newSize = loadedImage.size().expandedTo(size());
 
-    ResizeCommand(this, &loadedImage, newSize).redo();
+    image = loadedImage;
+    ResizeCommand(this, &image, newSize).redo();
     undoStack->clear();
 
     return true;
