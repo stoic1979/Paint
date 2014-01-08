@@ -35,7 +35,7 @@ bool Document::openImage(const QString &fileName)
         return false;
     }
 
-    QSize newSize = loadedImage.size().expandedTo(size());
+    const QSize newSize = loadedImage.size().expandedTo(size());
 
     resizeImage(&loadedImage, newSize);
     modified = false;

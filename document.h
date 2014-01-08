@@ -13,8 +13,9 @@ class Document : public QWidget
 {
     Q_OBJECT
 public:
-    typedef std::function<std::unique_ptr<Shape>(
-            const QPoint &, int, const QColor&)> shape_factory_t;
+    typedef std::function<
+        std::unique_ptr<Shape>(
+            const QPoint&, int, const QColor&)> shape_factory_t;
 
     explicit Document(QWidget *parent = 0);
 

@@ -25,33 +25,13 @@ private slots:
     void penWidth();
 
 private:
-    void createActions();
     void createMenus();
     bool maybeSave();
     bool saveFile(const QByteArray &fileFormat);
 
-    Document *doc;
+    QActionGroup brushActionGroup;
 
-    QMenu *fileMenu;
-    QMenu *brushMenu;
-    QMenu *effectsMenu;
-
-    QAction *openAct;
-    QAction *saveAsAct;
-    QAction *exitAct;
-
-    QAction *penColorAct;
-    QAction *penWidthAct;
-
-    QActionGroup *brushActionGroup;
-    QAction *ellipseAct;
-    QAction *eraserAct;
-    QAction *rectAct;
-    QAction *scribbleAct;
-
-    QAction *flipHorizAct;
-    QAction *flipVerticAct;
-    QAction *rotateAct;
+    Document doc;
 };
 
 #endif // MAINWINDOW_H
