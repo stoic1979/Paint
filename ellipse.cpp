@@ -35,7 +35,7 @@ void Ellipse::doDraw(QPainter &painter)
 
 QRect Ellipse::doRect() const
 {
-    return r;
+    return r.normalized();
 }
 
 void Ellipse::doUpdate(const QPoint &toPoint)

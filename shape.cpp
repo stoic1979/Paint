@@ -21,7 +21,8 @@ void Shape::draw(QPainter &painter)
 
 QRect Shape::rect() const
 {
-    return doRect();
+    const int rad = penWidth / 2 + 2;
+    return doRect().adjusted(-rad, -rad, +rad, +rad);
 }
 
 void Shape::update(const QPoint &toPoint)

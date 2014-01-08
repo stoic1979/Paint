@@ -37,7 +37,7 @@ void Rectangle::doDraw(QPainter &painter)
 
 QRect Rectangle::doRect() const
 {
-    return r;
+    return r.normalized();
 }
 
 void Rectangle::doUpdate(const QPoint &toPoint)

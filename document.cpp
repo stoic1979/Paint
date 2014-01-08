@@ -11,6 +11,43 @@ Document::Document(QWidget *parent) :
 {
 }
 
+void Document::pushShape(std::unique_ptr<Shape> &&shape, bool modifies)
+{
+    QPainter painter(&image);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    shape->draw(painter);
+
+    const QRect rect = shape->rect();
+
+    shapes.push_back(std::move(shape));
+
+    modified = modifies;
+
+    update(rect);
+}
+
+std::unique_ptr<Shape> Document::popShape()
+{
+    std::unique_ptr<Shape> shape(std::move(shapes.back()));
+    shapes.pop_back();
+
+    QPainter painter(&image);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    const QRect rect = shape->rect();
+    painter.fillRect(rect, Qt::white);
+
+    for (const std::unique_ptr<Shape>& item : shapes) {
+        if (rect.intersects(item->rect())) {
+            item->draw(painter);
+        }
+    }
+
+    update(shape->rect());
+    return shape;
+}
+
 void Document::flip(bool horiz, bool vert)
 {
     image = image.mirrored(horiz, vert);
@@ -87,10 +124,7 @@ void Document::mouseMoveEvent(QMouseEvent *event)
         const QRect prevRect = currentShape->rect();
         currentShape->update(event->pos());
 
-        const int rad = (penWidth / 2) + 2;
-        update(currentShape->rect()
-               .united(prevRect)
-               .adjusted(-rad, -rad, +rad, +rad));
+        update(currentShape->rect().united(prevRect));
 
         modified = true;
     }
@@ -99,12 +133,7 @@ void Document::mouseMoveEvent(QMouseEvent *event)
 void Document::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && currentShape) {
-        QPainter painter(&image);
-        currentShape->draw(painter);
-
-        shapes.emplace_back(std::move(currentShape));
-
-        modified = true;
+        pushShape(std::move(currentShape));
     }
 }
 
@@ -113,6 +142,7 @@ void Document::paintEvent(QPaintEvent *event)
     const QRect paintRect = event->rect();
 
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
 
     painter.drawImage(paintRect, image, paintRect);
 

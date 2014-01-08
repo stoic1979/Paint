@@ -19,6 +19,9 @@ public:
 
     explicit Document(QWidget *parent = 0);
 
+    void pushShape(std::unique_ptr<Shape> &&shape, bool modifies = true);
+    std::unique_ptr<Shape> popShape();
+
     bool openImage(const QString &fileName);
     bool saveImage(const QString &fileName, const char *fileFormat);
     void setPenColor(const QColor &newColor);
