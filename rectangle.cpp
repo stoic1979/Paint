@@ -22,10 +22,8 @@ private:
 Rectangle::Rectangle(const QPoint &topLeft,
                      int penWidth,
                      const QColor &penColor) :
-    Shape(penWidth, penColor)
+    Shape(penWidth, penColor), r(topLeft, topLeft)
 {
-    r.setTopLeft(topLeft);
-    r.setBottomRight(topLeft);
 }
 
 void Rectangle::doDraw(QPainter &painter)

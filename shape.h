@@ -8,6 +8,8 @@
 
 #include <memory>
 
+class Document;
+
 class Shape
 {
 public:
@@ -40,6 +42,11 @@ std::unique_ptr<Shape> createEllipse(const QPoint &topLeft,
 std::unique_ptr<Shape> createEraser(const QPoint &topLeft,
                                       int penWidth,
                                       const QColor&);
+
+std::unique_ptr<Shape> createFill(Document *doc,
+                                  const QPoint &topLeft,
+                                  int penWidth,
+                                  const QColor&);
 
 std::unique_ptr<Shape> createRectangle(const QPoint &topLeft,
                                        int penWidth,

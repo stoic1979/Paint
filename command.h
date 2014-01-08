@@ -3,22 +3,27 @@
 
 #include "shape.h"
 
+#include <QImage>
+#include <QWidget>
 #include <QUndoCommand>
 
 #include <memory>
+#include <vector>
 
-class Document;
-
-class Command : public QUndoCommand
+class ShapeCommand : public QUndoCommand
 {
 public:
-    explicit Command(Document *d, std::unique_ptr<Shape> &&s);
+    explicit ShapeCommand(QWidget *doc, QImage *image,
+                          std::unique_ptr<Shape> &&s);
 
     virtual void undo() override;
     virtual void redo() override;
 
 private:
-    Document *doc;
+    QWidget *doc;
+    QImage *image;
+
+    QImage undoImage;
     std::unique_ptr<Shape> shape;
 };
 

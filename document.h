@@ -7,7 +7,6 @@
 #include <QWidget>
 
 #include <functional>
-#include <list>
 #include <memory>
 
 class Document : public QWidget
@@ -19,9 +18,6 @@ public:
             const QPoint&, int, const QColor&)> shape_factory_t;
 
     explicit Document(QUndoStack *undoStack, QWidget *parent = 0);
-
-    void pushShape(Shape *shape);
-    void popShape();
 
     bool openImage(const QString &fileName);
     bool saveImage(const QString &fileName, const char *fileFormat);
@@ -35,6 +31,9 @@ public:
     int getPenWidth() const { return penWidth; }
 
     void flip(bool horiz, bool vert);
+
+    std::vector<QPoint> floodFill(const QPoint &pos, const QRgb &color);
+
     void rotate(qreal deg);
 
 protected:
@@ -58,7 +57,6 @@ private:
     shape_factory_t factory;
 
     std::unique_ptr<Shape> currentShape;
-    std::list<Shape*> shapes;
 };
 
 #endif // DOCUMENT_H

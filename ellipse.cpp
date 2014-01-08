@@ -20,10 +20,8 @@ private:
 };
 
 Ellipse::Ellipse(const QPoint &topLeft, int penWidth, const QColor &penColor) :
-    Shape(penWidth, penColor)
+    Shape(penWidth, penColor), r(topLeft, topLeft)
 {
-    r.setTopLeft(topLeft);
-    r.setBottomRight(topLeft);
 }
 
 void Ellipse::doDraw(QPainter &painter)

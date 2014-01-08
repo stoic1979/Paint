@@ -1,9 +1,12 @@
 #include "document.h"
 
 #include "command.h"
+#include "floodfill.h"
 
 #include <qevent.h>
 #include <QPainter>
+
+#include <algorithm>
 
 Document::Document(QUndoStack *undoStack, QWidget *parent) :
     QWidget(parent),
@@ -14,45 +17,17 @@ Document::Document(QUndoStack *undoStack, QWidget *parent) :
 {
 }
 
-void Document::pushShape(Shape *shape)
-{
-    QPainter painter(&image);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-
-    shape->draw(painter);
-
-    shapes.push_back(shape);
-    modified = true;
-
-    update(shape->rect());
-}
-
-void Document::popShape()
-{
-    Shape *const shape = shapes.back();
-    shapes.pop_back();
-
-    QPainter painter(&image);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-
-    const QRect rect = shape->rect();
-    painter.fillRect(rect, Qt::white);
-
-    for (auto item : shapes) {
-        if (rect.intersects(item->rect())) {
-            item->draw(painter);
-        }
-    }
-
-    update(shape->rect());
-}
-
 void Document::flip(bool horiz, bool vert)
 {
     image = image.mirrored(horiz, vert);
     modified = true;
 
     update();
+}
+
+std::vector<QPoint> Document::floodFill(const QPoint &pos, const QRgb &color)
+{
+    return ::floodFill(&image, pos, color);
 }
 
 void Document::rotate(qreal deg)
@@ -132,7 +107,8 @@ void Document::mouseMoveEvent(QMouseEvent *event)
 void Document::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && currentShape) {
-        undoStack->push(new Command(this, std::move(currentShape)));
+        undoStack->push(new ShapeCommand(this, &image,
+                                         std::move(currentShape)));
     }
 }
 

@@ -19,9 +19,12 @@ SOURCES += main.cpp\
     ellipse.cpp \
     rectangle.cpp \
     scribble.cpp \
-    command.cpp
+    command.cpp \
+    floodfill.cpp \
+    fill.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
     shape.h \
-    command.h
+    command.h \
+    floodfill.h

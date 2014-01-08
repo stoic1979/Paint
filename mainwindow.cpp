@@ -73,6 +73,8 @@ void MainWindow::penWidth()
 
 void MainWindow::createMenus()
 {
+    using namespace std::placeholders;
+
     QMenu *const fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(tr("&Open..."), this, SLOT(open()), QKeySequence::Open);
     fileMenu->addAction("&Save As...", this, SLOT(save()));
@@ -98,6 +100,7 @@ void MainWindow::createMenus()
     const std::pair<QString, Document::shape_factory_t> shapeActions[] = {
         std::make_pair(tr("Ellipse"), createEllipse),
         std::make_pair(tr("Eraser"), createEraser),
+        std::make_pair(tr("Fill"), std::bind(createFill, &doc, _1, _2, _3)),
         std::make_pair(tr("Rectangle"), createRectangle),
         std::make_pair(tr("Line"), createScribble)
     };

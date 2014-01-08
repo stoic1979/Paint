@@ -2,17 +2,27 @@
 
 #include "document.h"
 
-Command::Command(Document *d, std::unique_ptr<Shape> &&s) :
-    doc(d), shape(std::move(s))
+ShapeCommand::ShapeCommand(QWidget *doc, QImage *image,
+                           std::unique_ptr<Shape> &&s) :
+    doc(doc), image(image),
+    undoImage(image->copy(s->rect())), shape(std::move(s))
 {
 }
 
-void Command::undo()
+void ShapeCommand::undo()
 {
-    doc->popShape();
+    const QRect rect = shape->rect();
+
+    QPainter painter(image);
+    painter.drawImage(rect, undoImage);
+
+    doc->update(rect);
 }
 
-void Command::redo()
+void ShapeCommand::redo()
 {
-    doc->pushShape(shape.get());
+    QPainter painter(image);
+    shape->draw(painter);
+
+    doc->update(shape->rect());
 }
