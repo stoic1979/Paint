@@ -18,8 +18,10 @@ SOURCES += main.cpp\
     shape.cpp \
     ellipse.cpp \
     rectangle.cpp \
-    scribble.cpp
+    scribble.cpp \
+    command.cpp
 
 HEADERS  += mainwindow.h \
     document.h \
-    shape.h
+    shape.h \
+    command.h

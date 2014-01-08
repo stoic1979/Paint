@@ -9,7 +9,7 @@
 #include <utility>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), brushActionGroup(this)
+    : QMainWindow(parent), brushActionGroup(this), doc(&undoStack)
 {
     setCentralWidget(&doc);
 
@@ -78,6 +78,16 @@ void MainWindow::createMenus()
     fileMenu->addAction("&Save As...", this, SLOT(save()));
     fileMenu->addSeparator();
     fileMenu->addAction(tr("E&xit"),this, SLOT(close()), QKeySequence::Quit);
+
+    QMenu *const editMenu = menuBar()->addMenu(tr("&Edit"));
+
+    QAction *const undoAct = undoStack.createUndoAction(editMenu, tr("&Undo"));
+    undoAct->setShortcut(QKeySequence::Undo);
+    editMenu->addAction(undoAct);
+
+    QAction *const redoAct = undoStack.createRedoAction(editMenu, tr("&Redo"));
+    redoAct->setShortcut(QKeySequence::Redo);
+    editMenu->addAction(redoAct);
 
     QMenu *const brushMenu = menuBar()->addMenu(tr("&Brush"));
     brushMenu->addAction(tr("&Pen Color..."), this, SLOT(penColor()));

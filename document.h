@@ -3,6 +3,7 @@
 
 #include "shape.h"
 
+#include <QUndoStack>
 #include <QWidget>
 
 #include <functional>
@@ -17,10 +18,10 @@ public:
         std::unique_ptr<Shape>(
             const QPoint&, int, const QColor&)> shape_factory_t;
 
-    explicit Document(QWidget *parent = 0);
+    explicit Document(QUndoStack *undoStack, QWidget *parent = 0);
 
-    void pushShape(std::unique_ptr<Shape> &&shape, bool modifies = true);
-    std::unique_ptr<Shape> popShape();
+    void pushShape(Shape *shape);
+    void popShape();
 
     bool openImage(const QString &fileName);
     bool saveImage(const QString &fileName, const char *fileFormat);
@@ -47,6 +48,8 @@ private:
     void resizeImage(QImage *image, const QSize &newSize);
 
     QImage image;
+    QUndoStack *undoStack;
+
     bool modified;
 
     int penWidth;
@@ -55,7 +58,7 @@ private:
     shape_factory_t factory;
 
     std::unique_ptr<Shape> currentShape;
-    std::list<std::unique_ptr<Shape>> shapes;
+    std::list<Shape*> shapes;
 };
 
 #endif // DOCUMENT_H

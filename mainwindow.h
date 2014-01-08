@@ -5,6 +5,7 @@
 
 #include <QActionGroup>
 #include <QMainWindow>
+#include <QUndoStack>
 
 class MainWindow : public QMainWindow
 {
@@ -30,6 +31,7 @@ private:
     bool saveFile(const QByteArray &fileFormat);
 
     QActionGroup brushActionGroup;
+    QUndoStack undoStack;
 
     Document doc;
 };

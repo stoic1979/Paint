@@ -1,35 +1,35 @@
 #include "document.h"
 
+#include "command.h"
+
 #include <qevent.h>
 #include <QPainter>
 
-Document::Document(QWidget *parent) :
+Document::Document(QUndoStack *undoStack, QWidget *parent) :
     QWidget(parent),
+    undoStack(undoStack),
     modified(false),
     penWidth(1),
     penColor(Qt::blue)
 {
 }
 
-void Document::pushShape(std::unique_ptr<Shape> &&shape, bool modifies)
+void Document::pushShape(Shape *shape)
 {
     QPainter painter(&image);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     shape->draw(painter);
 
-    const QRect rect = shape->rect();
+    shapes.push_back(shape);
+    modified = true;
 
-    shapes.push_back(std::move(shape));
-
-    modified = modifies;
-
-    update(rect);
+    update(shape->rect());
 }
 
-std::unique_ptr<Shape> Document::popShape()
+void Document::popShape()
 {
-    std::unique_ptr<Shape> shape(std::move(shapes.back()));
+    Shape *const shape = shapes.back();
     shapes.pop_back();
 
     QPainter painter(&image);
@@ -38,14 +38,13 @@ std::unique_ptr<Shape> Document::popShape()
     const QRect rect = shape->rect();
     painter.fillRect(rect, Qt::white);
 
-    for (const std::unique_ptr<Shape>& item : shapes) {
+    for (auto item : shapes) {
         if (rect.intersects(item->rect())) {
             item->draw(painter);
         }
     }
 
     update(shape->rect());
-    return shape;
 }
 
 void Document::flip(bool horiz, bool vert)
@@ -133,7 +132,7 @@ void Document::mouseMoveEvent(QMouseEvent *event)
 void Document::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && currentShape) {
-        pushShape(std::move(currentShape));
+        undoStack->push(new Command(this, std::move(currentShape)));
     }
 }
 
