@@ -11,18 +11,19 @@
 Document::Document(QUndoStack *undoStack, QWidget *parent) :
     QWidget(parent),
     undoStack(undoStack),
-    modified(false),
     penWidth(1),
     penColor(Qt::blue)
 {
 }
 
+bool Document::isModified() const
+{
+    return !undoStack->isClean();
+}
+
 void Document::flip(bool horiz, bool vert)
 {
-    image = image.mirrored(horiz, vert);
-    modified = true;
-
-    update();
+    undoStack->push(new FlipCommand(this, &image, horiz, vert));
 }
 
 std::vector<QPoint> Document::floodFill(const QPoint &pos, const QRgb &color)
@@ -32,11 +33,7 @@ std::vector<QPoint> Document::floodFill(const QPoint &pos, const QRgb &color)
 
 void Document::rotate(qreal deg)
 {
-    QMatrix transf;
-    image = image.transformed(transf.rotate(deg));
-    modified = true;
-
-    update();
+    undoStack->push(new RotateCommand(this, &image, deg));
 }
 
 bool Document::openImage(const QString &fileName)
@@ -48,21 +45,16 @@ bool Document::openImage(const QString &fileName)
 
     const QSize newSize = loadedImage.size().expandedTo(size());
 
-    resizeImage(&loadedImage, newSize);
-    modified = false;
-
-    update();
+    ResizeCommand(this, &loadedImage, newSize).redo();
+    undoStack->clear();
 
     return true;
 }
 
 bool Document::saveImage(const QString &fileName, const char *fileFormat)
 {
-    QImage visibleImage = image;
-    resizeImage(&visibleImage, size());
-
-    if (visibleImage.save(fileName, fileFormat)) {
-        modified = false;
+    if (image.save(fileName, fileFormat)) {
+        undoStack->clear();
         return true;
     } else {
         return false;
@@ -99,8 +91,6 @@ void Document::mouseMoveEvent(QMouseEvent *event)
         currentShape->update(event->pos());
 
         update(currentShape->rect().united(prevRect));
-
-        modified = true;
     }
 }
 
@@ -132,24 +122,14 @@ void Document::resizeEvent(QResizeEvent *event)
         const int newWidth = qMax(width() + 128, image.width());
         const int newHeight = qMax(height() + 128, image.height());
 
-        resizeImage(&image, QSize(newWidth, newHeight));
+        const QSize newSize(newWidth, newHeight);
 
-        update();
+        if (isModified()) {
+            undoStack->push(new ResizeCommand(this, &image, newSize));
+        } else {
+            ResizeCommand(this, &image, newSize).redo();
+        }
     }
 
     QWidget::resizeEvent(event);
-}
-
-void Document::resizeImage(QImage *image, const QSize &newSize)
-{
-    if (image->size() == newSize) {
-        return;
-    }
-
-    QImage newImage(newSize, QImage::Format_RGB32);
-    newImage.fill(Qt::white);
-
-    QPainter painter(&newImage);
-    painter.drawImage(QPoint(0, 0), *image);
-    *image = newImage;
 }

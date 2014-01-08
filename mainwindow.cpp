@@ -11,9 +11,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), brushActionGroup(this), doc(&undoStack)
 {
-    setCentralWidget(&doc);
-
     createMenus();
+
+    setCentralWidget(&doc);
 
     setWindowTitle(tr("Paint"));
     resize(500, 500);

@@ -26,6 +26,7 @@ private slots:
     void penWidth();
 
 private:
+
     void createMenus();
     bool maybeSave();
     bool saveFile(const QByteArray &fileFormat);

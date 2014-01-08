@@ -19,22 +19,23 @@ public:
 
     explicit Document(QUndoStack *undoStack, QWidget *parent = 0);
 
+    bool isModified() const;
+
     bool openImage(const QString &fileName);
     bool saveImage(const QString &fileName, const char *fileFormat);
+
     void setPenColor(const QColor &newColor);
     void setPenWidth(int newWidth);
 
-    void setShapeFactory(shape_factory_t f);
-
-    bool isModified() const { return modified; }
     QColor getPenColor() const { return penColor; }
     int getPenWidth() const { return penWidth; }
 
+    void setShapeFactory(shape_factory_t f);
+
     void flip(bool horiz, bool vert);
+    void rotate(qreal deg);
 
     std::vector<QPoint> floodFill(const QPoint &pos, const QRgb &color);
-
-    void rotate(qreal deg);
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -44,12 +45,8 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private:
-    void resizeImage(QImage *image, const QSize &newSize);
-
     QImage image;
     QUndoStack *undoStack;
-
-    bool modified;
 
     int penWidth;
     QColor penColor;
