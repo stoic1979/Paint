@@ -91,3 +91,22 @@ some design outline.
 
   [1]: http://en.wikipedia.org/wiki/Flood_fill/
   [2]: http://www.gnu.org/software/gpaint/
+
+Building and testing
+====================
+This project has been built and run successfully on Debian/Wheezy with Qt-5.2.0.
+The binary has also been run successfully on Mint/Olivia with the following
+libraries taken from the Qt installation:
+* libicudata.so.51
+* libicui18n.so.51
+* libicuuc.so.51
+* libQt5Core.so.5
+* libQt5DBus.so.5
+* libQt5Gui.so.5
+* libQt5Widgets.so.5
+* platforms/libqxcb.so
+
+Given that the files above are located in the current directory along with the
+executable itself, this whole business can be run as follows:
+
+    LD_LIBRARY_PATH=. ./Paint
