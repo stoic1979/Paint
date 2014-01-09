@@ -1,6 +1,12 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #include "command.h"
 
 #include "document.h"
+
+namespace Paint {
 
 enum CommandId { ResizeCommandId = 1 };
 
@@ -109,3 +115,5 @@ void RotateCommand::rotate(qreal deg)
 
     doc->update();
 }
+
+} // namespace Paint

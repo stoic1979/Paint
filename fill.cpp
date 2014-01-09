@@ -1,9 +1,15 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #include "document.h"
 #include "shape.h"
 
 #include <QPoint>
 
 #include <vector>
+
+namespace Paint {
 
 class Fill : public Shape
 {
@@ -70,3 +76,5 @@ std::unique_ptr<Shape> createFill(Document *doc,
 {
     return std::unique_ptr<Shape>(new Fill(doc, topLeft, penWidth, penColor));
 }
+
+} // namespace Paint

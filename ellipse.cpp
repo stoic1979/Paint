@@ -1,4 +1,10 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #include "shape.h"
+
+namespace Paint {
 
 class Ellipse : public Shape
 {
@@ -47,3 +53,5 @@ std::unique_ptr<Shape> createEllipse(const QPoint &topLeft,
 {
     return std::unique_ptr<Shape>(new Ellipse(topLeft, penWidth, penColor));
 }
+
+} // namespace Paint

@@ -1,3 +1,7 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -6,6 +10,8 @@
 #include <QActionGroup>
 #include <QMainWindow>
 #include <QUndoStack>
+
+namespace Paint {
 
 class MainWindow : public QMainWindow
 {
@@ -36,5 +42,7 @@ private:
 
     Document doc;
 };
+
+} // namespace Paint
 
 #endif // MAINWINDOW_H

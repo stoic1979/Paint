@@ -1,3 +1,7 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #ifndef COMMAND_H
 #define COMMAND_H
 
@@ -9,6 +13,8 @@
 
 #include <memory>
 #include <vector>
+
+namespace Paint {
 
 class ShapeCommand : public QUndoCommand
 {
@@ -77,5 +83,7 @@ private:
 
     qreal deg;
 };
+
+} // namespace Paint
 
 #endif // COMMAND_H

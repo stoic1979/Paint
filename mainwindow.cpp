@@ -1,3 +1,7 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #include "mainwindow.h"
 
 #include "document.h"
@@ -7,6 +11,8 @@
 
 #include <functional>
 #include <utility>
+
+namespace Paint {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), brushActionGroup(this), doc(&undoStack)
@@ -170,3 +176,5 @@ bool MainWindow::saveFile(const QByteArray &fileFormat)
     return !fileName.isEmpty() &&
             doc.saveImage(fileName, fileFormat.constData());
 }
+
+} // namespace Paint

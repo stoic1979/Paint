@@ -1,4 +1,10 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #include "shape.h"
+
+namespace Paint {
 
 class Rectangle : public Shape
 {
@@ -49,3 +55,5 @@ std::unique_ptr<Shape> createRectangle(const QPoint &topLeft,
 {
     return std::unique_ptr<Shape>(new Rectangle(topLeft, penWidth, penColor));
 }
+
+} // namespace Paint

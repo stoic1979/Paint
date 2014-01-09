@@ -1,3 +1,7 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #include "document.h"
 
 #include "command.h"
@@ -7,6 +11,8 @@
 #include <QPainter>
 
 #include <algorithm>
+
+namespace Paint {
 
 Document::Document(QUndoStack *undoStack, QWidget *parent) :
     QWidget(parent),
@@ -28,7 +34,7 @@ void Document::flip(bool horiz, bool vert)
 
 std::vector<QPoint> Document::floodFill(const QPoint &pos, const QRgb &color)
 {
-    return ::floodFill(&image, pos, color);
+    return Paint::floodFill(&image, pos, color);
 }
 
 void Document::rotate(qreal deg)
@@ -134,3 +140,5 @@ void Document::resizeEvent(QResizeEvent *event)
 
     QWidget::resizeEvent(event);
 }
+
+} // Paint

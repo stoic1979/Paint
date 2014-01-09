@@ -1,3 +1,7 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #ifndef SHAPE_H
 #define SHAPE_H
 
@@ -7,6 +11,8 @@
 #include <QRect>
 
 #include <memory>
+
+namespace Paint {
 
 class Document;
 
@@ -55,5 +61,7 @@ std::unique_ptr<Shape> createRectangle(const QPoint &topLeft,
 std::unique_ptr<Shape> createScribble(const QPoint &topLeft,
                                       int penWidth,
                                       const QColor& penColor);
+
+} // namespace Paint
 
 #endif // SHAPE_H

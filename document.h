@@ -1,3 +1,7 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
@@ -8,6 +12,8 @@
 
 #include <functional>
 #include <memory>
+
+namespace Paint {
 
 class Document : public QWidget
 {
@@ -55,5 +61,7 @@ private:
 
     std::unique_ptr<Shape> currentShape;
 };
+
+} // namespace Paint
 
 #endif // DOCUMENT_H

@@ -1,6 +1,12 @@
+/* Paint
+ * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ */
+
 #include "shape.h"
 
 #include <QPolygon>
+
+namespace Paint {
 
 class Scribble : public Shape
 {
@@ -57,3 +63,5 @@ std::unique_ptr<Shape> createScribble(const QPoint &topLeft,
 {
     return std::unique_ptr<Shape>(new Scribble(topLeft, penWidth, penColor));
 }
+
+} // namespace Paint
