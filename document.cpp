@@ -24,17 +24,18 @@ Document::Document(QUndoStack *undoStack, QWidget *parent) :
 
 bool Document::isModified() const
 {
+    /* undo stack keeps the document's modification state */
     return !undoStack->isClean();
-}
-
-void Document::flip(bool horiz, bool vert)
-{
-    undoStack->push(new FlipCommand(this, &image, horiz, vert));
 }
 
 std::vector<QPoint> Document::floodFill(const QPoint &pos, const QRgb &color)
 {
     return Paint::floodFill(&image, pos, color);
+}
+
+void Document::flip(bool horiz, bool vert)
+{
+    undoStack->push(new FlipCommand(this, &image, horiz, vert));
 }
 
 void Document::rotate(qreal deg)
@@ -52,6 +53,8 @@ bool Document::openImage(const QString &fileName)
     const QSize newSize = loadedImage.size().expandedTo(size());
 
     image = loadedImage;
+
+    // reuse the command's functionality out of the undo stack
     ResizeCommand(this, &image, newSize).redo();
     undoStack->clear();
 
@@ -104,6 +107,7 @@ void Document::mouseMoveEvent(QMouseEvent *event)
 void Document::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && currentShape) {
+        // Done with drawind the image.  Now pass the buck to the undo stack.
         undoStack->push(new ShapeCommand(this, &image,
                                          std::move(currentShape)));
     }
@@ -114,10 +118,14 @@ void Document::paintEvent(QPaintEvent *event)
     const QRect paintRect = event->rect();
 
     QPainter painter(this);
+    // This is to avoid some pesky artefacts on some platforms (e.g. Debian)
+    // when the pen width is only 1 pixel
     painter.setRenderHint(QPainter::Antialiasing, true);
 
+    // just get the required bit of image updated on the widget
     painter.drawImage(paintRect, image, paintRect);
 
+    // ... and draw a shape if there's any under construction
     if (currentShape) {
         currentShape->draw(painter);
     }
@@ -131,6 +139,9 @@ void Document::resizeEvent(QResizeEvent *event)
 
         const QSize newSize(newWidth, newHeight);
 
+        // Allow to undo resize operation only when there's been some other
+        // modification prior to it.  Otherwise it make little sense and any
+        // internal resize operations would also be caught here.
         if (isModified()) {
             undoStack->push(new ResizeCommand(this, &image, newSize));
         } else {

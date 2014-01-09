@@ -30,6 +30,13 @@
 
 namespace Paint {
 
+/**
+ * The whole flood-fill thing is extracted from gPaint's 'src/fill.c' source.
+ * Left as close as possible to the original code with some required
+ * modifications (eg. using `std::vector` as the stack rather than a
+ * preallocated buffer).
+ */
+
 struct fillpixelinfo
 {
    int y, xl, xr, dy;

@@ -40,6 +40,7 @@ Fill::Fill(Document *doc,
     points(doc->floodFill(topLeft, penColor.rgb())),
     r(topLeft, topLeft)
 {
+    // Find the containing rectangle
     for (const QPoint &p : points) {
         if (p.x() < r.left()) {
             r.setLeft(p.x());
@@ -67,6 +68,7 @@ QRect Fill::doRect() const
 
 void Fill::doUpdate(const QPoint &)
 {
+    // Flood-fill at the point of button press.  Ignore "dragging".
 }
 
 std::unique_ptr<Shape> createFill(Document *doc,

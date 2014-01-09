@@ -16,6 +16,13 @@
 
 namespace Paint {
 
+/**
+ * Here we have all commands to be used for undo/redo support.
+ */
+
+/**
+ * @brief The ShapeCommand class for creating/undoing shapes on the document.
+ */
 class ShapeCommand : public QUndoCommand
 {
 public:
@@ -33,6 +40,10 @@ private:
     std::unique_ptr<Shape> shape;
 };
 
+/**
+ * @brief The FlipCommand class for flipping the image (document).  Can flip
+ * both horizontally and vertically in any combination.
+ */
 class FlipCommand : public QUndoCommand
 {
 public:
@@ -49,6 +60,10 @@ private:
     bool horizontal, vertical;
 };
 
+/**
+ * @brief The ResizeCommand class for resizing the image (document).  Only
+ * increases the size.  Able to be merged with other subsequent resize commands.
+ */
 class ResizeCommand : public QUndoCommand
 {
 public:
@@ -67,6 +82,9 @@ private:
     QSize oldSize, newSize;
 };
 
+/**
+ * @brief The RotateCommand class for rotating the image (document).
+ */
 class RotateCommand : public QUndoCommand
 {
 public:

@@ -15,10 +15,17 @@
 
 namespace Paint {
 
+/**
+ * @brief The Document class representing a document where we draw on.
+ */
 class Document : public QWidget
 {
     Q_OBJECT
 public:
+
+    /**
+     * @brief Shapes factory function prototype
+     */
     typedef std::function<
         std::unique_ptr<Shape>(
             const QPoint&, int, const QColor&)> shape_factory_t;

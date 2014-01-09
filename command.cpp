@@ -8,6 +8,7 @@
 
 namespace Paint {
 
+/* Needed for merging */
 enum CommandId { ResizeCommandId = 1 };
 
 ShapeCommand::ShapeCommand(QWidget *doc, QImage *image,
@@ -67,6 +68,10 @@ bool ResizeCommand::mergeWith(const QUndoCommand *command)
     if (command->id() != id())
         return false;
 
+    /* Subsequent resize command will look like a single one:  keep the first
+     * command's previous size and update it with the latest resize command's
+     * new size.
+     */
     newSize = static_cast<const ResizeCommand*>(command)->newSize;
     return true;
 }

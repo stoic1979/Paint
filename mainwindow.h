@@ -13,6 +13,9 @@
 
 namespace Paint {
 
+/**
+ * @brief The MainWindow class representing the main application's window.
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

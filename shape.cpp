@@ -27,6 +27,8 @@ void Shape::draw(QPainter &painter)
 
 QRect Shape::rect() const
 {
+    // Consider pen's width and make sure the outline is included in the
+    // returned rectangle.
     const int rad = penWidth / 2 + 2;
     return doRect().adjusted(-rad, -rad, +rad, +rad);
 }
