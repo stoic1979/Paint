@@ -28,3 +28,8 @@ HEADERS  += mainwindow.h \
     shape.h \
     command.h \
     floodfill.h
+
+OTHER_FILES += \
+    README.md \
+    UNLICENSE.txt \
+    LICENSE.GPL
