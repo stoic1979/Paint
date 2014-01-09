@@ -122,8 +122,12 @@ void MainWindow::createMenus()
                        std::bind(&Document::flip, &doc, true, false)),
         std::make_pair(tr("Flip Vertically"),
                        std::bind(&Document::flip, &doc, false, true)),
-        std::make_pair(tr("Rotate 90 deg"),
-                       std::bind(&Document::rotate, &doc, 90.0))
+        std::make_pair(tr("Rotate Right 90 deg"),
+                       std::bind(&Document::rotate, &doc, 90.0)),
+        std::make_pair(tr("Rotate Left 90 deg"),
+                       std::bind(&Document::rotate, &doc, -90.0)),
+        std::make_pair(tr("Rotate 180 deg"),
+                       std::bind(&Document::rotate, &doc, 180.0))
     };
 
     for (const auto &effectDesc : effectActions) {
