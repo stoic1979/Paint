@@ -1,5 +1,7 @@
-/* Paint
+/* Qt Paint
  * Copyright (C) 2014 Krzysztof Konopko <krzysztof.konopko@konagma.pl>
+ *
+ * Under Enhancement By Navjot Singh, Weavebytes
  */
 
 #include "mainwindow.h"
@@ -21,9 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     setCentralWidget(&doc);
 
-    setWindowTitle(tr("Paint"));
-    resize(500, 500);
-
+    setWindowTitle(tr("Qt Paint - Open Source Painter For All"));
+    resize(900, 600);
+    setWindowState(Qt::WindowMaximized);
     brushActionGroup.actions().first()->trigger();
 }
 
